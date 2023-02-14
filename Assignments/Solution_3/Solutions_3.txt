@@ -1,0 +1,94 @@
+######## EXERCISE 1
+
+x1 <- seq(1,10,0.1)
+x2 <- log(x1)
+
+n = length(x1)
+err = rnorm(n,0,0.5)
+y = 0+2*x1+0.5*x2 + err
+
+model<- lm(y~x1+x2-1)
+fit <- summary(model)
+
+
+sqrt(sum(fit$residuals^2)/(n-2))
+
+######## EXERCISE 2
+
+
+x1 <- seq(1,10,0.1)
+x2 <- log(x1)
+
+n = length(x1)
+err = rnorm(n,0,0.5)
+y = 1+2*x1+0.5*x2 + err
+
+model<- lm(y~x1+x2+1)
+fit <- summary(model)
+
+X <- cbind(rep(1,n),x1,x2)
+
+b_ols <- solve(t(X)%*%X)%*%t(X)%*%y
+
+s <- sqrt(sum(fit$residuals^2)/(n-3))
+
+s^2*solve(t(X)%*%X)
+vcov(fit)
+
+
+######## EXERCISE 3
+
+x1 = runif(1000)/10
+x2 = log(x1+1)
+err = rnorm(1000,0,1)
+y = x1+x2+err
+
+
+fit <- lm(y~x1+x2-1)
+summary(fit)
+vcov(fit)
+
+X = cbind(x1,x2)
+solve(t(X)%*%X)
+
+######## EXERCISE 4
+
+n = 200
+err <- matrix(data = NA,200,1)
+err[1] = 0;
+
+for(i in 2:n){
+err[i] <- err[i-1]*-0.9+rnorm(1)
+}
+
+acf(err)
+
+######## EXERCISE 5
+
+sig = 2;
+nsim = 5000
+n = 500
+x1 <- runif(n)*10
+x2 <- log(x1)
+
+b <- matrix(data = NA,nsim,2)
+s <- matrix(data = NA,nsim,1)
+for(j in 1:nsim){
+y = 2*x1+0.5*x2 + rnorm(n,0,sig)
+model <- lm(y~x1+x2-1)
+b[j,1] <- model$coeff[1]
+b[j,2] <- model$coeff[2]
+s[j] <- sum(model$residuals^2)/(n-2)
+}
+
+cov(b)
+X = cbind(x1,x2)
+sig^2*solve(t(X)%*%X)
+
+######## EXERCISE 6
+
+Ratio = s/sig^2*(n-2)
+xp = seq(350,750,1)
+yp = dchisq(xp,n-2)
+hist(Ratio,50,prob=TRUE)
+lines(xp,yp, col = "red")
