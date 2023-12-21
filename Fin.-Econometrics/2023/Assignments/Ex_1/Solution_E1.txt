@@ -1,0 +1,77 @@
+##### EXERCISE 1
+
+setwd("G:/My Drive/Corsi/FinEc/Course/2024/exercises/Ex_1")
+
+#?read.csv # Check the documentation
+#?read.table # Check the documentation
+
+z <- read.csv('AAPL.csv',header = T) # Import data with read.csv
+z <- read.table('AAPL.csv',sep=",",header=T) # Import data with read.table
+
+is.data.frame(z) # TRUE, z is a data.frame object
+head(z) # Display the first 10 rows
+attach(z) # Now you can access the variables in the table in an easy way, by typing z$Date or z$Adj.Close
+
+##### EXERCISE 2
+
+# based on head(z), the data is sorted with dates in ascending order (oldest data first)
+
+# Drop Date, many options available, for instance
+w <- z[-c(1)] # Removes first column, and assigns the new data frame to w
+head(w)
+w <- within(z, rm(Date)) # Other option
+head(w)
+z$Date <- NULL #This acts on z directly, no need to re-assign the dataframe to a new variable (as w above)
+
+
+n <- 252
+z <- z[1:n,] # z has now only rows from 1 to 252
+nrow(z) # prints the number of rows of z
+p <- z$Adj.Close
+
+##### EXERCISE 3
+
+plot(p) #plot
+r <- diff(log(p)) #logreturns
+(252*var(r))^0.5 #annualized volatility
+
+##### EXERCISE 4
+
+par(mfrow=c(2,2)) # sets up the multi-panel plot, which is now empty
+r2 <- r^2
+plot(r) #top plot
+plot(r2) #middle plot
+acf(r) #bottom plot (acf already returns a plot)
+acf(r2) #bottom plot
+
+##### EXERCISE 5
+
+summary(r) # mean is zero (related to stilyzed fact 1) and the range is asymmetric (stilyzed fact 4)
+
+# Do it by a package
+# install.packages(c("moments","tseries")) # install moments package, which has functions for skewness and kurtosis (remove the first # to run)
+# also install tseries package (exercise 7)
+library(moments) #load the installed package
+skewness(r)
+kurtosis(r)
+
+#Do it by hand
+n<-251
+(sum((r - mean(r))^3)/n)/(sum((r - mean(r))^2)/n)^(3/2) # Returns are asymmetric, and right-skewed  stylized fact 4.
+n * sum((r - mean(r))^4)/(sum((r - mean(r))^2)^2) # This is a way bigger than 3: stylized fact 3.
+# The avobe formulas are implemented without the bias correction for the variance (division is by n and not n-1), 
+# in this way the numbers match with those from the functions in the moments package. We discussed that dividing by n or n-1 is not a big deal, unless the sample is really small.
+
+
+##### EXERCISE 6
+
+library(tseries)
+jarque.bera.test(r) # The tiny p-value leads to the rejection of the normality hypothesis. This is aligned with values computed above for the skewness and kurtosis.
+
+##### EXERCISE 7
+
+
+mean(r) #sample mean 
+var(r)  #sameple variance 
+
+# actually the mean and variance of the distribution would be the sample mean and sample variance

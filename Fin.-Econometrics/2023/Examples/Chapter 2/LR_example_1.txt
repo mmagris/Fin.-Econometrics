@@ -1,0 +1,44 @@
+
+
+x = seq(1,100,by=0.1)
+n = length(x)
+u = rnorm(n,0,5)
+y = 1+2*x+u
+
+plot(x,y)
+
+
+summary(lm(y~x))
+
+
+bhat = cov(y,x)/var(x)
+
+mean(y)-bhat*mean(x)
+
+#################
+
+fit <- lm(y~x)
+
+
+coef<-fit$coefficients
+
+a <- coef[[1]]
+b <- coef[[2]]
+
+
+yhat = a+b*x
+
+points(x,yhat,col="red")
+
+
+res = y-yhat
+
+mean(res)
+
+var(res)^0.5
+
+sum(x*res)
+
+
+summary(lm(y~x-1))
+
