@@ -1,9 +1,0 @@
-da=read.table("m-gm3dx7508.txt",header=T) 
-gm=da[,2] 
-gm1=ts(gm,frequency=12,start=c(1975,1)) 
-par(mfcol=c(2,1)) 
-
-plot(gm,type="l") 
-plot(gm1,type="l") 
-acf(gm,lag=24) 
-acf(gm1,lag=24)

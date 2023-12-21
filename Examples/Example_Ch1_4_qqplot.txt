@@ -1,7 +1,0 @@
-n = 5000
-
-a = rnorm(n,1,sqrt(3))
-b= rt(n,3)
-
-qqplot(a,b)
-abline(0,1)
